@@ -14,7 +14,7 @@ router
 router
   .route("/:id")
   .get(postController.getPostById)
-  .update(postController.updatePost)
+  .put(postController.updatePost)
   .delete(postController.deletePost);
 
 export default router;
