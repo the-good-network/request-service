@@ -90,6 +90,24 @@ const postModel = {
 
     return data[0];
   },
+
+  /**
+   * This function retrieves the user ID of the post owner
+   * @param {*} postId The ID of the post
+   * @returns The user ID of the post owner
+   */
+  async getPostUserId(postId) {
+    const { data, error } = await supabase
+      .from("posts")
+      .select("user_id")
+      .eq("id", postId);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data[0].user_id;
+  },
 };
 
 export default postModel;
