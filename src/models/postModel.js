@@ -35,7 +35,7 @@ const postModel = {
     if (error) {
       throw new Error(error.message);
     }
-    return data;
+    return data[0]; // Return the first and only post in the array
   },
 
   /**
