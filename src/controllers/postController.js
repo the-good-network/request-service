@@ -8,7 +8,10 @@ const postController = {
    * @returns The newly created request post
    */
   async createPost(req, res) {
+    const userId = req.id; // Get the user ID from the authenticated request
     const data = req.body;
+    data.user_id = userId;
+
     try {
       if (!data) {
         return res.status(400).json({ message: "Request data not found" });
@@ -70,12 +73,20 @@ const postController = {
    * @returns The updated post
    */
   async updatePost(req, res) {
+    const userId = req.id; // Get the user ID from the authenticated request
     const data = req.body;
     const postId = req.params.id;
+
     try {
+      const postUserId = await postModel.getPostUserId(postId);
+      if (postUserId !== userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+
       if (!data) {
         return res.status(400).json({ message: "Request data not found" });
       }
+
       const post = await postModel.updatePost(postId, data);
       res
         .status(201)
@@ -94,8 +105,15 @@ const postController = {
    * @returns The deleted post
    */
   async deletePost(req, res) {
+    const userId = req.id; // Get the user ID from the authenticated request
     const postId = req.params.id;
+
     try {
+      const postUserId = await postModel.getPostUserId(postId);
+      if (postUserId !== userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+
       const post = await postModel.deletePost(postId);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
